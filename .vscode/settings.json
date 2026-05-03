@@ -1,0 +1,24 @@
+{
+    "[makefile]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4,
+        "editor.detectIndentation": false
+    },
+
+    "cSpell.words": [
+        "createdb",
+        "dearmor",
+        "dropdb",
+        "jonlittler",
+        "keyrings",
+        "migratedown",
+        "migrateup",
+        "psql",
+        "raspi",
+        "simplebank",
+        "sqlc",
+        "sslmode",
+        "tableplus",
+        "techschool"
+    ]
+}
