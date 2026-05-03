@@ -1,5 +1,9 @@
 # Makefile
 
+# Go
+test:
+	go test -v -cover ./...
+
 # Database
 postgres: 
 	docker run --name postgres13 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=password -d postgres:13-alpine
@@ -19,4 +23,4 @@ migratedown:
 sqlc:
 	sqlc generate
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc
+.PHONY: test postgres createdb dropdb migrateup migratedown sqlc

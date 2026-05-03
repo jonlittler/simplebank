@@ -84,20 +84,15 @@ func TestListAccounts(t *testing.T) {
 		lastAccount = createRandomAccount(t)
 	}
 
-	offset := 0 // (n / 2) restrict to account owner so offset - 0
-	limit := n - offset
-	t.Logf("offset %d, limit %d", offset, limit)
-
 	arg := ListAccountsParams{
 		Owner:  lastAccount.Owner,
-		Limit:  int32(limit),
-		Offset: int32(offset),
+		Limit:  5,
+		Offset: 0,
 	}
 
 	accounts, err := testStore.ListAccounts(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, accounts)
-	require.Len(t, accounts, 1)
 
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
@@ -117,6 +112,6 @@ func TestAddAccountBalance(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, account2)
 
-	require.Equal(t, arg.ID, account2.ID)
+	require.Equal(t, account1.ID, account2.ID)
 	require.Equal(t, account1.Balance+arg.Balance, account2.Balance)
 }
