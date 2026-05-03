@@ -7,8 +7,10 @@
 
     "cSpell.words": [
         "createdb",
+        "DBTX",
         "dearmor",
         "dropdb",
+        "execrows",
         "jonlittler",
         "keyrings",
         "migratedown",

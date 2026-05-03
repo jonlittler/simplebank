@@ -38,3 +38,13 @@ migrate -version    # 4.19.1
 migrate create -ext sql -dir db/migration -seq init_schema
 migrate -path db/migration -database "postgres://root:password@localhost:5432/simplebank?sslmode=disable" -verbose up
 ```
+
+### SQLC
+https://docs.sqlc.dev/en/latest/ \
+https://sqlc.dev/
+
+```bash
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+sqlc init
+sqlc version    # v1.31.1
+```
