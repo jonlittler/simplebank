@@ -21,6 +21,13 @@ sqlc version        # v1.31.1
 go mod init github.com/jonlittler/ts/simplebank
 ```
 
+### Viper
+https://github.com/spf13/viper
+```bash
+go get github.com/spf13/viper
+SERVER_ADDR=0.0.0.0:8082 make server
+```
+
 ### Migrate
 https://github.com/golang-migrate/migrate/tree/master
 
