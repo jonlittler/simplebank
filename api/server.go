@@ -52,6 +52,7 @@ func (s *Server) setupRouter() {
 	router := gin.Default()
 
 	router.POST("/accounts", s.createAccount)
+	router.GET("/accounts", s.listAccounts)
 
 	/* add routes to router */
 	/* open routes */

@@ -55,3 +55,13 @@ go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 sqlc init
 sqlc version    # v1.31.1
 ```
+
+### Mock
+https://github.com/golang/mock
+```bash
+go get github.com/golang/mock/mockgen@v1.6.0        # needed for reflection
+go install github.com/golang/mock/mockgen@v1.6.0    # ~/go/bin/mockgen
+mockgen -version                                    # v1.6.0
+mockgen -help
+mockgen -package mockdb -destination ./db/mock/store.go github.com/jonlittler/ts/simplebank/db/sqlc Store 
+```

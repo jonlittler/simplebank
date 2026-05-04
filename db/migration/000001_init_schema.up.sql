@@ -40,3 +40,12 @@ ALTER TABLE "entries" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id"
 ALTER TABLE "transfers" ADD FOREIGN KEY ("from_account_id") REFERENCES "accounts" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE "transfers" ADD FOREIGN KEY ("to_account_id") REFERENCES "accounts" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+
+/* create paj user */
+-- insert into users (username, hashed_password, full_name, email)
+-- values ('paj', 'password', 'Pj & Apple', 'pjapp@gmail.com');
+
+insert into accounts (id, owner, balance, currency) 
+values (1, 'paj', 50000000, 'USD');
+
+select setval('accounts_id_seq', 1, true);
