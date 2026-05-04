@@ -53,6 +53,7 @@ func (s *Server) setupRouter() {
 
 	router.POST("/accounts", s.createAccount)
 	router.GET("/accounts", s.listAccounts)
+	router.GET("/accounts/:id", s.getAccount)
 
 	/* add routes to router */
 	/* open routes */

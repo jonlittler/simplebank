@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -47,13 +48,46 @@ func (s *Server) createAccount(ctx *gin.Context) {
 }
 
 /* **
- * List Account
+ * Get Account
  ** */
-type ListAccountsJson struct {
-	Owner string `json:"owner" binding:"required"`
+
+type GetAccountRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-type ListAccountsQuery struct {
+func (s *Server) getAccount(ctx *gin.Context) {
+
+	/* gin way */
+	var req GetAccountRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	account, err := s.store.GetAccount(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	// authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
+	// if account.Owner != authPayload.Username {
+	// 	err := fmt.Errorf("account doesn't belong to the authenticated user")
+	// 	ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+	// 	return
+	// }
+
+	ctx.JSON(http.StatusOK, account)
+}
+
+/* **
+ * List Account
+ ** */
+type ListAccounts struct {
 	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
@@ -61,23 +95,16 @@ type ListAccountsQuery struct {
 func (s *Server) listAccounts(ctx *gin.Context) {
 
 	/* gin way */
-	var reqJson ListAccountsJson
-	if err := ctx.ShouldBindJSON(&reqJson); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
-	var reqQuery ListAccountsQuery
-	if err := ctx.ShouldBindQuery(&reqQuery); err != nil {
+	var req ListAccounts
+	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
 	// authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
 	arg := db.ListAccountsParams{
-		Owner:  reqJson.Owner,
-		Limit:  reqQuery.PageSize,
-		Offset: reqQuery.PageSize * (reqQuery.PageID - 1),
+		Limit:  req.PageSize,
+		Offset: req.PageSize * (req.PageID - 1),
 	}
 	accounts, err := s.store.ListAccounts(ctx, arg)
 	if err != nil {
