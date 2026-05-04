@@ -238,7 +238,7 @@ func TestListAccountAPI(t *testing.T) {
 					Return(accounts, nil)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				t.Logf("accounts: %v", accounts)
+				t.Logf("accounts: %v", recorder.Body)
 				require.Equal(t, http.StatusOK, recorder.Code)
 				requireBodyAccountsMatch(t, recorder.Body, accounts)
 			},

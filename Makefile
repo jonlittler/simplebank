@@ -26,4 +26,7 @@ migratedown:
 sqlc:
 	sqlc generate
 
-.PHONY: test postgres createdb dropdb migrateup migratedown sqlc
+mock:
+	mockgen -package mockdb -destination ./db/mock/store.go github.com/jonlittler/ts/simplebank/db/sqlc Store 
+
+.PHONY: server test postgres createdb dropdb migrateup migratedown sqlc mock
