@@ -11,7 +11,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17
+        image: postgres:13
         env:
           POSTGRES_PASSWORD: password
           POSTGRES_USER: root
@@ -42,6 +42,11 @@ jobs:
           if [ -f go.mod ]; then
             go mod download
           fi
+
+      - name: Install Golang-Migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-amd64.tar.gz | tar xvz
+          mv migrate /usr/bin/migrate
 
       - name: Run migrations
         run: make migrateup
