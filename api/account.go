@@ -2,18 +2,16 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/jonlittler/ts/simplebank/db/sqlc"
+	"github.com/jonlittler/ts/simplebank/token"
 	"github.com/lib/pq"
 )
 
-/* **
- * Create Account
- ** */
 type CreateAccountRequest struct {
-	Owner    string `json:"owner" binding:"required"`
 	Currency string `json:"currency" binding:"required,currency"` /* custom validator */
 }
 
@@ -24,9 +22,9 @@ func (s *Server) createAccount(ctx *gin.Context) {
 		return
 	}
 
-	// authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
 	arg := db.CreateAccountParams{
-		Owner:    req.Owner,
+		Owner:    authPayload.Username,
 		Balance:  0,
 		Currency: req.Currency,
 	}
@@ -46,10 +44,6 @@ func (s *Server) createAccount(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, account)
 }
-
-/* **
- * Get Account
- ** */
 
 type GetAccountRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
@@ -74,19 +68,16 @@ func (s *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
-	// authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
-	// if account.Owner != authPayload.Username {
-	// 	err := fmt.Errorf("account doesn't belong to the authenticated user")
-	// 	ctx.JSON(http.StatusUnauthorized, errorResponse(err))
-	// 	return
-	// }
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
+	if account.Owner != authPayload.Username {
+		err := fmt.Errorf("account doesn't belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
 
 	ctx.JSON(http.StatusOK, account)
 }
 
-/* **
- * List Account
- ** */
 type ListAccounts struct {
 	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
@@ -101,8 +92,9 @@ func (s *Server) listAccounts(ctx *gin.Context) {
 		return
 	}
 
-	// authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload) // use authenticated user
 	arg := db.ListAccountsParams{
+		Owner:  authPayload.Username,
 		Limit:  req.PageSize,
 		Offset: req.PageSize * (req.PageID - 1),
 	}
