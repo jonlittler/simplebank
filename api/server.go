@@ -21,7 +21,7 @@ type Server struct {
 
 // NewServer creates a new HTTP server and set up routing.
 func NewServer(config util.Config, store db.Store) (*Server, error) {
-	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
+	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey) /* paseto token */
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
@@ -52,30 +52,20 @@ func (s *Server) setupRouter() {
 	/* create router */
 	router := gin.Default()
 
-	router.POST("/accounts", s.createAccount)
-	router.GET("/accounts", s.listAccounts)
-	router.GET("/accounts/:id", s.getAccount)
-
-	router.POST("/transfers", s.createTransfer)
-
-	router.POST("/users", s.createUser)
-
 	/* add routes to router */
 	/* open routes */
-	// router.POST("/users", s.createUser)
-	// router.POST("/users/login", s.loginUser)
+	router.POST("/users", s.createUser)
+	router.POST("/users/login", s.loginUser)
 
-	// /* protected routes */
-	// authRoutes := router.Group("/")
-	// authRoutes.Use(authMiddleware(s.tokenMaker))
+	/* protected routes */
+	authRoutes := router.Group("/")
+	authRoutes.Use(authMiddleware(s.tokenMaker))
 
-	// authRoutes.POST("/accounts", s.createAccount)
-	// authRoutes.GET("/accounts/:id", s.getAccountByID)
-	// authRoutes.GET("/accounts", s.listAccounts)
-	// authRoutes.PUT("/accounts/:id", s.updateAccountByID)
-	// authRoutes.DELETE("/accounts/:id", s.deleteAccountByID)
+	authRoutes.POST("/accounts", s.createAccount)
+	authRoutes.GET("/accounts/:id", s.getAccount)
+	authRoutes.GET("/accounts", s.listAccounts)
 
-	// authRoutes.POST("/transfers", s.createTransfer)
+	authRoutes.POST("/transfers", s.createTransfer)
 
 	/* save router to store */
 	s.router = router
