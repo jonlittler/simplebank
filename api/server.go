@@ -14,7 +14,7 @@ import (
 // Server serves HTTP requests for our banking service.
 type Server struct {
 	config     util.Config
-	store      db.Store
+	store      db.Store // interface
 	router     *gin.Engine
 	tokenMaker token.Maker
 }
@@ -27,6 +27,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	}
 	server := Server{config: config, store: store, tokenMaker: tokenMaker}
 
+	/* custom validator - registration */
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
 	}
@@ -54,6 +55,8 @@ func (s *Server) setupRouter() {
 	router.POST("/accounts", s.createAccount)
 	router.GET("/accounts", s.listAccounts)
 	router.GET("/accounts/:id", s.getAccount)
+
+	router.POST("/transfers", s.createTransfer)
 
 	/* add routes to router */
 	/* open routes */

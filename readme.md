@@ -43,6 +43,7 @@ sudo apt-get install -y migrate
 
 migrate -version    # 4.19.1
 migrate create -ext sql -dir db/migration -seq init_schema
+migrate create -ext sql -dir db/migration -seq add_users
 migrate -path db/migration -database "postgres://root:password@localhost:5432/simplebank?sslmode=disable" -verbose up
 ```
 
@@ -59,7 +60,7 @@ sqlc version    # v1.31.1
 ### Mock
 https://github.com/golang/mock
 ```bash
-go get github.com/golang/mock/mockgen@v1.6.0        # needed for reflection
+go get github.com/golang/mock/mockgen@v1.6.0        # needed for reflect mode
 go install github.com/golang/mock/mockgen@v1.6.0    # ~/go/bin/mockgen
 mockgen -version                                    # v1.6.0
 mockgen -help
