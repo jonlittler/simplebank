@@ -58,6 +58,8 @@ func (s *Server) setupRouter() {
 
 	router.POST("/transfers", s.createTransfer)
 
+	router.POST("/users", s.createUser)
+
 	/* add routes to router */
 	/* open routes */
 	// router.POST("/users", s.createUser)
