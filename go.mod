@@ -1,5 +1,6 @@
 module github.com/jonlittler/ts/simplebank
 
+// simulate an update to go version...
 go 1.25.1
 
 require (
