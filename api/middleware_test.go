@@ -48,7 +48,7 @@ func TestAuthMiddleware(t *testing.T) {
 		{
 			name: "Unsupported Authorization",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, "unsupported", username, time.Minute)
+				addAuthorization(t, request, tokenMaker, username, "unsupported", time.Minute)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusUnauthorized, recorder.Code)
@@ -57,7 +57,7 @@ func TestAuthMiddleware(t *testing.T) {
 		{
 			name: "Invalid Authorization Format",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, "", username, time.Minute)
+				addAuthorization(t, request, tokenMaker, username, "", time.Minute)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusUnauthorized, recorder.Code)
@@ -66,7 +66,7 @@ func TestAuthMiddleware(t *testing.T) {
 		{
 			name: "Expired Token",
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, username, -time.Minute)
+				addAuthorization(t, request, tokenMaker, username, authorizationTypeBearer, -time.Minute)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusUnauthorized, recorder.Code)
